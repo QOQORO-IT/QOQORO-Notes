@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draggable Divider</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            max-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            /* Modern and clean font */
+            background-color: #f4f4f9;
+            /* Lighter background */
+        }
+
+        .container {
+            display: flex;
+            height: 100%;
+            background: #ffffff;
+            /* Main container with a white background */
+            overflow: hidden;
+        }
+
+        .list-view {
+            width: 300px;
+            background: #e6e7ee;
+            /* Light gray background for list view */
+            overflow: auto;
+            padding: 20px;
+            height: 100%;
+            resize: horizontal;
+            border-right: 2px solid #cfd0d7;
+            /* Subtle gray border for separation */
+        }
+
+        table td:hover {
+          background-color: yellow;
+        }
+
+        .extra-sidebar {
+            background-color: #6750a4;
+            /* Deep purple background for sidebar */
+            padding: 2.5px;
+            width: 0;
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            transition: width 600ms ease;
+            overflow-y: auto;
+            color: white;
+            /* Text color for readability */
+        }
+
+        #logo {
+            color: white;
+            font-size: 21px;
+            line-height: 1.1; /* Reduced line-height for narrower spacing */
+            transition: 0.5s;
+            font-family: Arial, Helvetica, sans-serif;
+            text-shadow: 
+                0 1px 0 #ccc,
+                0 2px 0 #ccc, 
+                0 3px 0 #ccc, 
+                0 4px 0 #ccc, 
+                0 4px 10px rgba(0, 0, 0, 0.5); /* Larger shadow for the final depth effect */
+        }
+
+        .togglebutton {
+            cursor: pointer;
+            border-radius: 25px;
+            background-color: #7c4dff;
+            /* Vibrant purple for buttons */
+            border: none;
+            color: white;
+            z-index: 1;
+        }
+
+        .togglebutton:hover {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            /* Subtle shadow on hover */
+            background-color: #6a40c9;
+            /* Slightly darker purple on hover */
+        }
+
+        .divider {
+            cursor: ew-resize;
+            background: #5e35b1;
+            /* Darker purple for the divider */
+            width: 5px;
+        }
+
+        .tab-view {
+            flex-grow: 1;
+            overflow: hidden;
+            padding: 10px;
+        }
+
+        .tab-button {
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            background-color: #e6e7ee;
+            /* Light gray for inactive tabs */
+            margin-right: 5px;
+        }
+
+        .tab-button.active {
+            background-color: #7c4dff;
+            /* Bright purple for active tabs */
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            height: 100%;
+            padding: 5px;
+            border: 1px solid #cfd0d7;
+            border-top: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        h2,
+        h3 {
+            margin: 0;
+            color: #3e3e3e;
+            /* Dark gray for a softer look on headings */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="extra-sidebar" id="extra-sidebar">
+            <div class="logocont">
+                <img src="Qoqoro Transparent Logos.png" style="height: 40px; width: 100px;"></img>
+            </div>
+            <div style="position:relative; left:0px; transform: translateY(10px);">
+                <button class="togglebutton" onclick="toggleSidebar()" id="button2"
+                    style="margin: 10px; padding:4px">&nbspToggle Sidebar&nbsp</button>
+                <button id="toggle_notebook" class="tab-button" onclick="openTab('notebookeditor/notebook2.html')">Notebook</button>
+                <button id="toggle_pdfview" class="tab-button" allow="clipboard-write" 
+                        onclick="openTab('pdfviewer/pypdfium3.html'); window.viewedPage = 1;">
+                  PDF View
+                </button>
+
+            </div>
+        </div>
+        <div class="list-view">
+            <button class="togglebutton" onclick="toggleSidebar()" style="margin: 10px; padding:4px">&nbspToggle Sidebar&nbsp</button>
+            <table>
+                <tr>
+                    <td style="font-size: 13px; font-weight: bold;">List of items</td>
+                </tr>
+                <tbody id="data_table" style="font-size: 12px;"></tbody>
+            </table>
+        </div>
+        <div class="divider"></div>
+        <div class="tab-view">
+            <iframe id="notebook2Iframe" class="tab-content" src="notebookeditor/notebook2.html" style="display: none;"></iframe>
+            <iframe id="tab_pdf" class="tab-content" src="pdfviewer/pypdfium3.html" style="display: none;"></iframe>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            var extraSidebar = document.getElementById('extra-sidebar');
+            var sidebarContent = document.querySelector('.list-view');
+
+            if (extraSidebar.style.width === '0px' || extraSidebar.style.width === '') {
+                extraSidebar.style.display = 'block'; // Ensure it's visible before expanding
+                sidebarContent.style.visibility = 'hidden'; // Hide the sidebar content
+                setTimeout(function () {
+                    extraSidebar.style.width = '150px';
+                }, 10); // Slight delay to trigger the transition
+            } else {
+                extraSidebar.style.width = '0px';
+                setTimeout(function () {
+                    extraSidebar.style.display = 'none'; // Hide it after collapsing
+                    sidebarContent.style.visibility = 'visible'; // Show the sidebar content
+                }, 600); // Match the transition duration
+            }
+        }
+
+    </script>
+
+    <script>
+        function openTab(fileUrl) {
+            var i, tabcontent, tabbuttons;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tabbuttons = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tabbuttons.length; i++) {
+                tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
+            }
+            var iframe = getOrCreateIframe(fileUrl);
+            iframe.style.display = "block";
+            iframe.style.top = "0px";
+            iframe.style.position = "absolute";
+            event.currentTarget.className += " active";
+            loadIframeContent(iframe, fileUrl);
+
+                const iframeWidth = iframe.offsetWidth;
+                const iframeHeight = iframe.offsetHeight;
+
+                iframe.contentWindow.postMessage({
+                    type: 'setIframeAttributes',
+                    width: iframeWidth,
+                    height: iframeHeight
+                }, '*');
+        }
+
+
+
+        function getOrCreateIframe(fileUrl) {
+            var iframe = document.querySelector(`iframe[src="${fileUrl}"]`);
+            if (!iframe) {
+                iframe = document.createElement("iframe");
+                iframe.id = "notebook2Iframe"
+                iframe.className = "tab-content";
+                iframe.src = fileUrl;
+                document.querySelector('.tab-view').appendChild(iframe);
+            }
+            return iframe;
+        }
+
+        function adjustTabViewHeight(tabview) {
+            const headerHeight = document.querySelector('header') ? document.querySelector('header').offsetHeight : 0;
+            const footerHeight = document.querySelector('footer') ? document.querySelector('footer').offsetHeight : 0;
+            const availableHeight = window.innerHeight - headerHeight - footerHeight;
+
+            tabview.style.height = `${availableHeight}px`; // Set the height of tab-view based on the available height
+        }
+
+        function loadIframeContent(iframe, fileUrl) {
+            // Ensure the container takes full width and height dynamically
+            var tabview = document.querySelector('.tab-view');
+            adjustTabViewHeight(tabview);
+
+            // // Adjust iframe settings on load
+            // iframe.onload = function () {
+            //     try {
+            //         // Attempt to call a function inside the iframe once it has loaded
+            //         iframe.contentWindow.initializeCanvas();
+            //     } catch (err) {
+            //         console.log("Error initializing canvas: " + err.message);
+            //     }
+            // };
+
+            // Set size and zoom for '.tab-view' and '.tab-content'
+            document.querySelectorAll(".tab-view, .tab-content").forEach(function (element) {
+                element.style.width = "100%";
+                element.style.transform = "scale(1)";
+                element.style.transformOrigin = "top left";
+            });
+
+            // Apply styles directly to the iframe
+            iframe.style.width = "100%";
+            iframe.style.height = "100%"; // Explicitly set height to 100%
+            iframe.style.overflow = "auto";
+            iframe.style.border = "none"; // Optional: remove border for cleaner look
+        }
+
+
+        // Optional: Listen to window resize to adjust height dynamically
+        window.addEventListener('resize', function () {
+            const tabview = document.querySelector('.tab-view');
+            if (tabview) {
+                adjustTabViewHeight(tabview);
+            }
+        });
+
+
+
+        // Draggable divider functionality with performance improvements
+        const divider = document.querySelector('.divider');
+        const listView = document.querySelector('.list-view');
+        const tabView = document.querySelector('.tab-view');
+
+        divider.addEventListener('mousedown', function (e) {
+            e.preventDefault();
+            window.addEventListener('mousemove', throttleResize, false);
+            window.addEventListener('mouseup', stopResize, false);
+        });
+
+        function resize(e) {
+            const newWidth = e.clientX;
+            const totalWidth = window.innerWidth;
+            if (newWidth > 50 && newWidth < totalWidth - 50) { // Adjusted constraints for practical minimum width
+                listView.style.width = `${newWidth}px`;
+                tabView.style.flexGrow = 0; // This stops the flex-grow affecting the layout when resizing
+                tabView.style.width = `${totalWidth - newWidth}px`;
+            }
+        }
+
+        function stopResize() {
+            window.removeEventListener('mousemove', throttleResize, false);
+            window.removeEventListener('mouseup', stopResize, false);
+        }
+
+        // Implementing a simple throttle function to limit how often the resize function is called
+        function throttle(func, limit) {
+            let inThrottle;
+            return function() {
+                const args = arguments;
+                const context = this;
+                if (!inThrottle) {
+                    func.apply(context, args);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
+                }
+            }
+        }
+
+        const throttleResize = throttle(resize, 10); // Throttle resize calls to every 10 milliseconds
+
+
+    </script>
+
+    <script src="indexingfile.js"></script>
+</body>
+
+</html>
