@@ -22,10 +22,12 @@ QOQORO Notes is a web app which is similar to word processor and PKMs that runs 
 
 ## How to Use
 
-1. Download [qnote_anchor.exe](https://github.com/QOQORO-IT/QOQORO-Notes/releases/download/clientside/QOQORO_Anchor.exe) and open it to connect the folder
-2. Open the QOQORO Notes web app in your browser by typing "127.0.0.1:5000" or "https://qoqoro-it.github.io/QOQORO-Notes/".
-3. Start creating, editing, and saving your documents.
-4. No additional setup is needed.
+1. Download [qnote_anchor.exe](https://github.com/QOQORO-IT/QOQORO-Notes/releases/download/clientside/QOQORO_Anchor.exe) and open it to connect the folder, you can download this repository for hosting the web app as well.
+2. Edit the first editbox to the directory to the downloaded code of this web app after you have to extract it (if you just want to use the deployed website, just let it blank).
+4. Edit the second editbox to the directory to the desired folder you want to store your notes and pdfs.
+3. Open the QOQORO Notes web app in your browser by pressing [Launch App] (if you have the web app code) or [Open Existed Website].
+4. Start creating, editing, and saving your documents.
+5. No additional setup is needed.
 
 ## Know the Bugs
 This web app is still buggy, I need to re-structure and keep watch out on dynamic variables. Sometimes it is very hard to paste a very long content because the triggered events are very sensitive to user input.
