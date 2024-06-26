@@ -14,11 +14,12 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Error fetching folder list:', error));
     }, 5000); // Update interval
 
-    function renderFolders(folders, container, level = 0) {
+    function renderFolders(folders, container, level = 0, parentPath = '') {
         Object.entries(folders).forEach(([folderName, content]) => {
             if (folderName === 'files') {
                 return; // Skip files key
             }
+            const currentPath = parentPath ? `${parentPath}/${folderName}` : folderName;
             const folderRow = document.createElement('tr');
             const folderCell = document.createElement('td');
             folderCell.textContent = folderName;
@@ -27,20 +28,20 @@ document.addEventListener('DOMContentLoaded', function() {
             folderCell.style.cursor = 'pointer';
             folderRow.appendChild(folderCell);
             container.appendChild(folderRow);
-
+    
             const subfolderContainer = document.createElement('tbody');
             subfolderContainer.style.display = 'none'; // Initially hidden
             container.appendChild(subfolderContainer);
-
+    
             folderCell.onclick = function(event) {
                 event.stopPropagation(); // Prevent bubbling
                 subfolderContainer.style.display = subfolderContainer.style.display === '' ? 'none' : '';
             };
-
+    
             if (content.subfolders && Object.keys(content.subfolders).length > 0) {
-                renderFolders(content.subfolders, subfolderContainer, level + 1);
+                renderFolders(content.subfolders, subfolderContainer, level + 1, currentPath);
             }
-
+    
             if (Array.isArray(content.files) && content.files.length > 0) {
                 content.files.forEach(file => {
                     const fileRow = document.createElement('tr');
@@ -48,94 +49,69 @@ document.addEventListener('DOMContentLoaded', function() {
                     fileCell.textContent = file;
                     fileCell.className = 'file-title';
                     fileCell.style.paddingLeft = `${(level + 1) * 20}px`;
-                    fileCell.setAttribute('data-fullpath', `${folderName}/${file}`);
-
+                    fileCell.setAttribute('data-fullpath', `${currentPath}/${file}`);
+    
                     fileCell.onclick = function(event) {
                         event.stopPropagation(); // Prevent click from bubbling to the folder
-
+    
                         // Check if the file has a ".qnote" extension
                         if (file.endsWith('.qnote')) {
-                            let iframe = document.getElementById('notebook2Iframe'); // Make sure the iframe has an ID
+                            let iframe = document.getElementById('notebook2Iframe');
                             if (!iframe) {
-                                // If the iframe doesn't exist, open the tab immediately
                                 openTab('Notebook/notebook2.html');
                                 iframe = document.getElementById('notebook2Iframe');
                             }
-
-                            if (iframe.attachEvent) {
-                                iframe.attachEvent('onload', function() {
-                                    // Ensure the iframe is fully loaded
-                                    invokeHandleClick(iframe, `${folderName}/${file}`);
-                                });
-                            } else {
-                                iframe.onload = function() {
-                                    // Ensure the iframe is fully loaded
-                                    invokeHandleClick(iframe, `${folderName}/${file}`);
-                                };
-                            }
-
-                            // Call this function to try invoking handleClick
+    
                             function invokeHandleClick(iframe, filePath) {
                                 let iframeWindow = iframe.contentWindow;
                                 if (iframeWindow && iframeWindow.handleClick) {
                                     iframeWindow.handleClick(filePath);
                                 } else {
                                     console.error('handleClick function not found in iframe.');
-                                    // Optionally, you could open the tab as a fallback here
                                     openTab('Notebook/notebook2.html');
                                 }
                             }
-
-                            // Trigger the iframe load event if not already loaded
+    
                             if (iframe.contentWindow.document.readyState === 'complete') {
-                                invokeHandleClick(iframe, `${folderName}/${file}`);
+                                invokeHandleClick(iframe, `${currentPath}/${file}`);
+                            } else {
+                                iframe.onload = function() {
+                                    invokeHandleClick(iframe, `${currentPath}/${file}`);
+                                };
                             }
                             document.getElementById('toggle_notebook').click();
                         }
                         if (file.endsWith('.pdf')) {
-                            let iframe = document.getElementById('tab_pdf'); // Make sure the iframe has an ID
+                            let iframe = document.getElementById('tab_pdf');
                             if (!iframe) {
-                                // If the iframe doesn't exist, open the tab immediately
                                 openTab('SUCC/pypdfium3.html');
                                 iframe = document.getElementById('tab_pdf');
                             }
-
-                            if (iframe.attachEvent) {
-                                iframe.attachEvent('onload', function() {
-                                    // Ensure the iframe is fully loaded
-                                    invokeHandleClick(iframe, `${folderName}/${file}`);
-                                });
-                            } else {
-                                iframe.onload = function() {
-                                    // Ensure the iframe is fully loaded
-                                    invokeHandleClick(iframe, `${folderName}/${file}`);
-                                };
-                            }
-
-                            // Call this function to try invoking handleClick
+    
                             function invokeHandleClick(iframe, filePath) {
                                 let iframeWindow = iframe.contentWindow;
                                 if (iframeWindow && iframeWindow.handleClick) {
                                     iframeWindow.handleClick(filePath, 1);
                                 } else {
                                     console.error('handleClick function not found in iframe.');
-                                    // Optionally, you could open the tab as a fallback here
                                     openTab('SUCC/pypdfium3.html');
                                 }
                             }
-
-                            // Trigger the iframe load event if not already loaded
+    
                             if (iframe.contentWindow.document.readyState === 'complete') {
-                                invokeHandleClick(iframe, `${folderName}/${file}`);
+                                invokeHandleClick(iframe, `${currentPath}/${file}`);
+                            } else {
+                                iframe.onload = function() {
+                                    invokeHandleClick(iframe, `${currentPath}/${file}`);
+                                };
                             }
-                            document.getElementById('toggle_pdfview').click()
+                            document.getElementById('toggle_pdfview').click();
                         }
                     };
-
-                    
+    
                     fileRow.appendChild(fileCell);
                     subfolderContainer.appendChild(fileRow);
-
+    
                     // Adding context menu on right click
                     fileCell.addEventListener('contextmenu', function(event) {
                         event.preventDefault(); // Prevent default context menu
