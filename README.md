@@ -22,7 +22,7 @@ QOQORO Notesは、クライアントのブラウザで動作するワードプ�
 
 ## 使用方法
 
-1. qnote_anchor.exeをダウンロードし、開いてフォルダに接続します。
+1. [qnote_anchor.exe](https://github.com/QOQORO-IT/QOQORO-Notes/releases/download/clientside/QOQORO_Anchor.exe) をダウンロードし、開いてフォルダに接続します。
 2. ブラウザで「127.0.0.1:5000」または「https://qoqoro-it.github.io/QOQORO-Notes/」と入力してQOQORO Notes Webアプリを開きます。
 3. ドキュメントの作成、編集、保存を開始します。
 4. 追加のセットアップは不要です。
