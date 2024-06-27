@@ -117,14 +117,14 @@ button:hover {
   border: 2px solid black;
   background-color: white;
   margin: 2px;
-  padding: 4px;
+  padding: 2px;
   font-size: 11px;
   margin: 10px 0;
   overflow: hidden;
-  height: 400px;
-  width: 400px;
+  height: 1123px;  /* 297mm converted to pixels */
+  width: 794px;   /* 210mm converted to pixels */
   position: relative;
-  transform: translate(100%, 0);
+  transform: translate(20%, 0);
 }
 
 /* .pagebook>div {
