@@ -6,7 +6,11 @@
 
 QOQORO Notesは、クライアントのブラウザで動作するワードプロセッサやPKMに類似したWebアプリケーションです。NPMやその他のソフトウェアのインストールは不要です。
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/oJqOrfILZdo/0.jpg)](https://www.youtube.com/watch?v=oJqOrfILZdo)
+
+
+https://github.com/QOQORO-IT/QOQORO-Notes/assets/69721082/ca5a337b-2197-41c0-ac48-8468363d5972
+
+
 
 ## 特徴
 
