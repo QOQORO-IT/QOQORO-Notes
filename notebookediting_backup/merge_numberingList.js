@@ -51,36 +51,17 @@ function mergeListItems() {
         pagebook.querySelectorAll('ol, ul').forEach(list => {
             const listId = list.getAttribute('list_id') || list.querySelector('li[list_id]')?.getAttribute('list_id') || `list_${Date.now()}`;
             list.setAttribute('list_id', listId);
-            const firstLi = list.querySelector('li[list_index]');
-            let startIndex = firstLi ? parseInt(firstLi.getAttribute('list_index'), 10) : 1;
-            if (list.tagName.toLowerCase() === 'ol') {
-                list.setAttribute('start', startIndex);
-            }
             list.querySelectorAll('li').forEach((item, index) => {
                 item.setAttribute('list_id', listId);
                 if (list.tagName.toLowerCase() === 'ol') {
-                    const listIndex = startIndex + index;
-                    item.setAttribute('list_index', listIndex);
+                    item.setAttribute('list_index', index + 1);
                 } else {
                     item.removeAttribute('list_index');
                 }
             });
         });
-
-        // Remove outer div tags except those with the class "pagebook"
-        pagebook.querySelectorAll('div > ol, div > ul').forEach(list => {
-            let parent = list.parentNode;
-            while (parent && !parent.classList.contains('pagebook')) {
-                const grandparent = parent.parentNode;
-                grandparent.insertBefore(list, parent);
-                if (parent.childNodes.length === 0) {
-                    grandparent.removeChild(parent);
-                }
-                parent = grandparent;
-            }
-        });
     });
 }
-
 // Run the mergeListItems function every 2 seconds
 setInterval(mergeListItems, 2000);
+

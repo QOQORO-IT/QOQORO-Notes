@@ -5,12 +5,12 @@
         overlay.id = 'pagebook-overlay-' + pagebook.id;
         overlay.style.position = 'absolute';
         overlay.style.left = `${pagebook.offsetLeft}px`;
-        overlay.style.top = `${pagebook.getBoundingClientRect().bottom}px`;
+        overlay.style.top = `${pagebook.offsetTop + pagebook.offsetHeight * 1.05}px`;
         overlay.style.width = `${pagebook.offsetWidth}px`;
         overlay.style.height = '1.5px';
         overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.01)';
         overlay.style.zIndex = '9000';
-        document.body.appendChild(overlay);
+        pagebook.parentNode.appendChild(overlay);
         return overlay;
     }
 
@@ -33,24 +33,18 @@
                 if (node.tagName === 'BR') {
                     chunks.push('<br>');
                 } else if (node.tagName === 'UL' || node.tagName === 'OL') {
-                    processList(node);
-                } else if (node.tagName === 'DIV') {
-                    const tableInDiv = node.querySelector('table');
-                    if (tableInDiv) {
-                        processTable(tableInDiv);
-                    } else {
-                        // Handle empty divs with line breaks
-                        if (node.innerHTML.trim() === '<br>' || node.innerHTML.trim() === '') {
-                            chunks.push(node.outerHTML);
-                        } else {
-                            // Process div contents separately
-                            chunks.push(node.outerHTML);
+                    const listItems = Array.from(node.children).filter(child => child.tagName === 'LI');
+                    listItems.forEach((li, index) => {
+                        const listChunk = document.createElement(node.tagName);
+                        listChunk.appendChild(li.cloneNode(true));
+                        chunks.push(listChunk.outerHTML);
+
+                        // Add a line break after each list item except the last one
+                        if (index < listItems.length - 1) {
+                            chunks.push('<br>');
                         }
-                    }
-                } else if (node.tagName === 'TABLE') {
-                    processTable(node);
-                } else if (node.tagName === 'SPAN' || isInlineElement(node)) {
-                    // Preserve span and other inline elements
+                    });
+                } else if (node.tagName === 'DIV') {
                     chunks.push(node.outerHTML);
                 } else {
                     Array.from(node.childNodes).forEach(processNode);
@@ -58,69 +52,17 @@
             }
         }
 
-        function isInlineElement(node) {
-            const inlineElements = ['A', 'STRONG', 'EM', 'B', 'I', 'U', 'SUB', 'SUP'];
-            return inlineElements.includes(node.tagName);
-        }
-
-        function processTable(table) {
-            const rows = Array.from(table.querySelectorAll('tr'));
-            rows.forEach((row, index) => {
-                const tempTable = document.createElement('table');
-                // Copy attributes from original table
-                for (let attr of table.attributes) {
-                    tempTable.setAttribute(attr.name, attr.value);
-                }
-                const tempTbody = document.createElement('tbody');
-                tempTbody.appendChild(row.cloneNode(true));
-                tempTable.appendChild(tempTbody);
-                chunks.push(tempTable.outerHTML);
-            });
-        }
-
-        function processList(list) {
-            const listItems = Array.from(list.children).filter(child => child.tagName === 'LI');
-            listItems.forEach((li, index) => {
-                const listChunk = document.createElement(list.tagName);
-                listChunk.appendChild(li.cloneNode(true));
-                chunks.push(listChunk.outerHTML);
-            });
-        }
-
         Array.from(doc.body.childNodes).forEach(processNode);
         return chunks;
     }
 
-
     function adjustText(textContent) {
-        const nextPageId = getDivIdNumber(textContent.id);
-        const overflowContainer = document.getElementById(`pagenumber${nextPageId + 1}`);
-        if (!overflowContainer) return;
-
-        // Handle table-specific logic
-        const table = textContent.querySelector('table');
-        if (table) {
-            const rows = Array.from(table.rows);
-            let keepRows = [];
-            let moveRows = [];
-
-            rows.forEach((row, index) => {
-                if (index < rows.length / 2) {
-                    keepRows.push(row);
-                } else {
-                    moveRows.push(row);
-                }
-            });
-
-
-        }
-
-        // Continue with generic handling
-    const finalCaretPosition = saveCaretPosition(textContent);
+        const finalCaretPosition = saveCaretPosition(textContent);
         const overlay = document.getElementById('pagebook-overlay-' + textContent.id);
         if (!overlay) return;
 
         let overflowDetected = textContent.scrollHeight > textContent.offsetHeight;
+        console.log(`Overflow detected: ${overflowDetected}`);
 
         if (!overflowDetected) {
             console.log("No overflow detected, caret position should not change");
@@ -128,43 +70,58 @@
         }
 
         console.log("Overflow detected, caret position may change");
-        localStorage.setItem('originalContent_' + textContent.id, textContent.innerHTML);
+
+        const nextPage_id = getDivIdNumber(textContent.id);
+        const overflowContainer = document.getElementById(`pagenumber${nextPage_id + 1}`);
+        if (!overflowContainer) return;
 
         const fullHTML = textContent.innerHTML;
-        const chunks = extractAndChunkHTML(fullHTML);
-        // alert(chunks)
         let visibleHTML = '';
         let overflowHTML = '';
 
-        textContent.innerHTML = fullHTML;
+        const chunks = extractAndChunkHTML(fullHTML);
+        console.log("Chunks:", chunks);
 
-        for (let i = 0; i < chunks.length; i++) {
-            const testHTML = visibleHTML + chunks[i];
-            textContent.innerHTML = testHTML;
+        textContent.innerHTML = '';
+        let isOverflowing = false;
 
-            if (textContent.scrollHeight > textContent.offsetHeight) {
-                overflowHTML = chunks.slice(i).join('');
-                break;
+        for (const chunk of chunks) {
+            if (!isOverflowing) {
+                textContent.innerHTML += chunk;
+                isOverflowing = textContent.scrollHeight > textContent.offsetHeight;
+                if (isOverflowing) {
+                    // Remove the last added chunk from textContent
+                    textContent.innerHTML = textContent.innerHTML.slice(0, -(chunk.length));
+                    overflowHTML += chunk;
+                } else {
+                    visibleHTML += chunk;
+                }
             } else {
-                visibleHTML = testHTML;
+                overflowHTML += chunk;
             }
         }
 
         if (overflowHTML) {
-            textContent.innerHTML = visibleHTML;
-            const parser = new DOMParser();
-            const doc = parser.parseFromString('<div>' + overflowHTML + '</div>', 'text/html');
-            const overflowContent = doc.body.firstChild;
-
-            // Use prepend to add the overflow content as the first child of the overflow container
-            overflowContainer.prepend(overflowContent);
-
+            // Ensure we're not duplicating content
+            const existingContent = overflowContainer.innerHTML;
+            if (!existingContent.includes(overflowHTML)) {
+                overflowContainer.innerHTML = overflowHTML + existingContent;
+            }
             restoreCaretPosition(textContent, finalCaretPosition);
+
+            if (initialCaretPosition && finalCaretPosition) {
+                if (initialCaretPosition.offset !== finalCaretPosition.offset) {
+                    console.log("Caret position has changed due to overflow adjustment");
+                } else {
+                    console.log("Caret position remained the same after overflow adjustment");
+                }
+            }
         } else {
             console.log("No more overflowing elements detected, stopping adjustment");
         }
     }
-
+    
+    
 
     // Improved saveCaretPosition function
     function saveCaretPosition(element) {
@@ -250,7 +207,7 @@
     }
 
     setInterval(adding_Overlay, 1000);
-
+    
     function getDivIdNumber(id) {
         // Extract the numeric part of the id
         return parseInt(id.match(/\d+/)[0], 10);

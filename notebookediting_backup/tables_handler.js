@@ -58,10 +58,6 @@ function findParent(tagname, el) {
 function addTableAtCaret() {
   const table = document.createElement('table');
   table.border = '1';
-
-    const uniqueId = 'table_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
-    table.setAttribute("table_id", uniqueId);
-    
   let tr = table.insertRow(-1);
   for (let i = 0; i < 3; i++) {
       let td = tr.insertCell(-1);

@@ -2,9 +2,10 @@ function restructurePageContent() {
   // Find all elements with IDs starting with "pagenumber"
   const pageElements = document.querySelectorAll('div[id^="pagenumber"]');
 
-  // pageElements.forEach(pageElement => {
-  //   const innerDiv = pageElement.querySelector('div.
-  //   }
+  pageElements.forEach(pageElement => {
+    const innerDiv = pageElement.querySelector('div.
+    }
+  });
 }
 
 // Run the function immediately
