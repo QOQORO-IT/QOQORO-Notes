@@ -28,20 +28,20 @@ document.addEventListener('DOMContentLoaded', function() {
             folderCell.style.cursor = 'pointer';
             folderRow.appendChild(folderCell);
             container.appendChild(folderRow);
-    
+
             const subfolderContainer = document.createElement('tbody');
             subfolderContainer.style.display = 'none'; // Initially hidden
             container.appendChild(subfolderContainer);
-    
+
             folderCell.onclick = function(event) {
                 event.stopPropagation(); // Prevent bubbling
                 subfolderContainer.style.display = subfolderContainer.style.display === '' ? 'none' : '';
             };
-    
+
             if (content.subfolders && Object.keys(content.subfolders).length > 0) {
                 renderFolders(content.subfolders, subfolderContainer, level + 1, currentPath);
             }
-    
+
             if (Array.isArray(content.files) && content.files.length > 0) {
                 content.files.forEach(file => {
                     const fileRow = document.createElement('tr');
@@ -50,10 +50,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     fileCell.className = 'file-title';
                     fileCell.style.paddingLeft = `${(level + 1) * 20}px`;
                     fileCell.setAttribute('data-fullpath', `${currentPath}/${file}`);
-    
+
                     fileCell.onclick = function(event) {
                         event.stopPropagation(); // Prevent click from bubbling to the folder
-    
+
                         // Check if the file has a ".qnote" extension
                         if (file.endsWith('.qnote')) {
                             let iframe = document.getElementById('notebook2Iframe');
@@ -61,17 +61,17 @@ document.addEventListener('DOMContentLoaded', function() {
                                 openTab('Notebook/notebook2.html');
                                 iframe = document.getElementById('notebook2Iframe');
                             }
-    
+
                             function invokeHandleClick(iframe, filePath) {
                                 let iframeWindow = iframe.contentWindow;
-                                if (iframeWindow && iframeWindow.handleClick) {
-                                    iframeWindow.handleClick(filePath);
+                                if (iframeWindow && iframeWindow.handleClick_forNote) {
+                                    iframeWindow.handleClick_forNote(filePath);
                                 } else {
-                                    console.error('handleClick function not found in iframe.');
+                                    console.error('handleClick_forNote function not found in iframe.');
                                     openTab('Notebook/notebook2.html');
                                 }
                             }
-    
+
                             if (iframe.contentWindow.document.readyState === 'complete') {
                                 invokeHandleClick(iframe, `${currentPath}/${file}`);
                             } else {
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 openTab('SUCC/pypdfium3.html');
                                 iframe = document.getElementById('tab_pdf');
                             }
-    
+
                             function invokeHandleClick(iframe, filePath) {
                                 let iframeWindow = iframe.contentWindow;
                                 if (iframeWindow && iframeWindow.handleClick) {
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     openTab('SUCC/pypdfium3.html');
                                 }
                             }
-    
+
                             if (iframe.contentWindow.document.readyState === 'complete') {
                                 invokeHandleClick(iframe, `${currentPath}/${file}`);
                             } else {
@@ -108,10 +108,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             document.getElementById('toggle_pdfview').click();
                         }
                     };
-    
+
                     fileRow.appendChild(fileCell);
                     subfolderContainer.appendChild(fileRow);
-    
+
                     // Adding context menu on right click
                     fileCell.addEventListener('contextmenu', function(event) {
                         event.preventDefault(); // Prevent default context menu
@@ -130,10 +130,10 @@ document.addEventListener('DOMContentLoaded', function() {
             let iframeWindow = iframe2.contentWindow;
             const { fullPath, page } = event.data;
 
-            if (iframeWindow.handleClick) {
-                iframeWindow.handleClick(fullPath, page);
+            if (iframeWindow.handleClick_forNote) {
+                iframeWindow.handleClick_forNote(fullPath, page);
             } else {
-                console.error("handleClick function not found.");
+                console.error("handleClick_forNote function not found.");
             }
         }
     }, false);

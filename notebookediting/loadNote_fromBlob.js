@@ -50,3 +50,29 @@ function loadSavedContentFromBlob(blob) {
 
     xhr.send();
   }
+
+    // Define the handleClick function and attach it to the window object
+    window.handleClick_forNote = function(filename) {
+      console.log("Clicked:", filename);
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', `http://127.0.0.1:5000/get_file_content?filename=${filename}`);
+      xhr.responseType = 'blob'; // Set response type to Blob
+  
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          const blob = xhr.response;
+  
+          // Load the saved content from the Blob
+          loadSavedContentFromBlob(blob);
+  
+        } else {
+          console.error('Error fetching file content:', xhr.statusText);
+        }
+      };
+  
+      xhr.onerror = function () {
+        console.error('Network error:', xhr.statusText);
+      };
+  
+      xhr.send();
+    }
