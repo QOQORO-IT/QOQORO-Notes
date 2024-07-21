@@ -76,3 +76,9 @@ function loadSavedContentFromBlob(blob) {
   
       xhr.send();
     }
+
+    function note_Linker() {
+      let iframe = document.getElementById('notebook2Iframe');
+      let iframeWindow = iframe.contentWindow;
+      iframeWindow.handleClick_forNote("HSE/Audit Sistem Manajemen K3_Kemenaker/Referensi Audit Sistem Manajemen K3 (SMK3)_test2.qnote");
+    }
