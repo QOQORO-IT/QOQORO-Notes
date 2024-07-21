@@ -200,6 +200,7 @@
 
     // DOM elements
     const toolbar = document.querySelector('.all_toolbar_container');
+    const toolbartabs = document.querySelector('.toolbar');
     const hideShowButton = document.querySelector('.hide-show-button');
     const indicator = document.querySelector('.tab-indicator');
 
@@ -227,6 +228,7 @@
     function toggleToolbar() {
       isToolbarVisible = !isToolbarVisible;
       toolbar.style.display = isToolbarVisible ? 'block' : 'none';
+      toolbartabs.style.display = isToolbarVisible ? 'block' : 'none';
       hideShowButton.textContent = isToolbarVisible ? '🔼' : '🔽';
       positionHideShowButton();
     }
@@ -246,10 +248,10 @@
           topPosition = indicatorRect.bottom + window.scrollY;
         } else {
           // Fallback position if neither activeToolbar nor tabIndicator is found
-          const toolbarContainer = document.querySelector('.all_toolbar_container');
+          const toolbarContainer = document.querySelector('.tab-button');
           if (toolbarContainer) {
             const containerRect = toolbarContainer.getBoundingClientRect();
-            topPosition = containerRect.top + window.scrollY;
+            topPosition = containerRect.bottom + window.scrollY;
           } else {
             console.warn("Could not find reference elements for positioning hideShowButton");
             return;
