@@ -20,8 +20,8 @@
   <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
 
 
-  <link rel="stylesheet" href="toolbox_style.css" type="text/css" />
-  <link rel="stylesheet" href="styles.css" type="text/css" />
+  <link href="toolbox_style.css" rel="stylesheet" type="text/css" />
+  <link href="styles.css" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -41,7 +41,6 @@
   </div>
 
   <div class="toolbar">
-    <div class="tab-indicator"></div> <!-- Sliding Indicator -->
     <button id = "firsttab" class="tab-button active" onclick="switchToolbar_Tabs(event, 'main')">Main</button>
     <button class="tab-button" onclick="switchToolbar_Tabs(event, 'font')">Font</button>
     <button class="tab-button" onclick="switchToolbar_Tabs(event, 'paragraph')">Paragraph</button>
@@ -50,6 +49,7 @@
   </div>
 
   <div class="all_toolbar_container">
+    <div class="tab-indicator"></div> <!-- Sliding Indicator -->
     <div id="main" class="tab-content active">
       <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
         <div class="tooltip">
