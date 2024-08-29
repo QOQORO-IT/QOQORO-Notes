@@ -126,8 +126,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (event.data && event.data.type === 'referenceClicked') {
             // Simulate a click to toggle PDF view visibility (if applicable)
             document.getElementById('toggle_pdfview').click();
-            let iframe2 = document.getElementById('tab_pdf');
+            let iframe2 = document.getElementById('notebook2Iframe');
             let iframeWindow = iframe2.contentWindow;
+            alert(iframe2.innerHTML);
             const { fullPath, page } = event.data;
 
             if (iframeWindow.handleClick_forNote) {
@@ -152,26 +153,29 @@ document.addEventListener('DOMContentLoaded', function() {
         menu.style.borderRadius = '5px';
         menu.style.cursor = 'pointer';
         menu.style.zIndex = '1000';
+        menu.style.listStyle = 'none';
 
-        // Rename option
         // Rename option
         const renameOption = document.createElement('li');
         renameOption.textContent = 'Rename';
         renameOption.onclick = function() {
             const newName = prompt('Enter new name:');
             if (newName) {
-                // Ensure fullPath is derived correctly, assuming it includes the file/folder name
-                const fullPath = target.getAttribute('data-fullpath');
-                const encodedFullPath = encodeURIComponent(fullPath);
-                const encodedNewName = encodeURIComponent(newName);
+                const lastSlashIndex = fullPath.lastIndexOf('/');
+                const directory = fullPath.substring(0, lastSlashIndex);
+                const newFullPath = directory + '/' + newName;
 
-                fetch(`http://127.0.0.1:5000/rename?oldName=${encodedFullPath}&newName=${encodedNewName}`)
+                const encodedOldPath = encodeURIComponent(fullPath);
+                const encodedNewPath = encodeURIComponent(newFullPath);
+
+                fetch(`http://127.0.0.1:5000/rename?oldName=${encodedOldPath}&newName=${encodedNewPath}`)
                     .then(response => response.json())
                     .then(result => {
                         if (result.error) {
                             alert('Error: ' + result.error);
                         } else {
-                            target.textContent = newName; // Update display name
+                            target.textContent = newName;
+                            target.setAttribute('data-fullpath', newFullPath);
                             alert('Renamed to: ' + newName);
                         }
                     })
@@ -180,16 +184,36 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.removeChild(menu);
         };
 
+        // Extract Filename Location option
+        const extractLocationOption = document.createElement('li');
+        extractLocationOption.textContent = 'Extract File Location';
+        extractLocationOption.onclick = function() {
+            const fileLocation = fullPath.substring(0, fullPath.lastIndexOf('/'));
+            const fileName = fullPath.substring(fullPath.lastIndexOf('/') + 1);
+            // Optional: Copy to clipboard
+            navigator.clipboard.writeText(`${fileLocation}/${fileName}`)
+                .then(() => console.log('File location copied to clipboard'))
+                .catch(err => console.error('Failed to copy: ', err));
+
+            document.body.removeChild(menu);
+        };
+
         menu.appendChild(renameOption);
+        menu.appendChild(extractLocationOption);
 
         document.body.appendChild(menu);
 
         // Auto-remove the menu after 3000 ms or on mouse leave
         setTimeout(() => {
-            document.body.removeChild(menu);
+            if (document.body.contains(menu)) {
+                document.body.removeChild(menu);
+            }
         }, 3000);
+
         menu.onmouseleave = function() {
-            document.body.removeChild(menu);
+            if (document.body.contains(menu)) {
+                document.body.removeChild(menu);
+            }
         };
     }
 });

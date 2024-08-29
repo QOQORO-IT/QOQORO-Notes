@@ -176,6 +176,40 @@
     </div>
 
     <script>
+        // Listen for messages from iframes in the parent window
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'referenceClicked') {
+                const { fullPath, page } = event.data;
+
+                // Get the iframe element
+                const iframePDF = document.getElementById('tab_pdf');
+
+                // Ensure that handleClick is accessible and then call it
+                if (iframePDF && iframePDF.contentWindow && typeof iframePDF.contentWindow.handleClick === 'function') {
+                    iframePDF.contentWindow.handleClick(fullPath, page);  // Call the function in the iframe
+                } else {
+                    console.error('handleClick function is not defined in the iframe');
+                }
+            }
+        }, false);
+
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'qnote_referenceClicked') {
+                const { fullPath, page } = event.data;
+
+                // Get the iframe element
+                const iframePDF = document.getElementById('notebook2Iframe');
+
+                // Ensure that handleClick is accessible and then call it
+                if (iframePDF && iframePDF.contentWindow && typeof iframePDF.contentWindow.handleClick === 'function') {
+                    iframePDF.contentWindow.handleClick_forNote(fullPath);  // Call the function in the iframe
+                } else {
+                    console.error('handleClick function is not defined in the iframe');
+                }
+            }
+        }, false);
+
+
         function toggleSidebar() {
             var extraSidebar = document.getElementById('extra-sidebar');
             var sidebarContent = document.querySelector('.list-view');
