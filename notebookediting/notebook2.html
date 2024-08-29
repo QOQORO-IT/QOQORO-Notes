@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insert Span</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+    integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+    integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd"
+    crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+    integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <link href="styles.css" rel="stylesheet" type="text/css" />
+  <link rel='stylesheet'
+    href='https://cdn-uicons.flaticon.com/2.4.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.0/uicons-thin-rounded/css/uicons-thin-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+
+
+  <link href="toolbox_style.css" rel="stylesheet" type="text/css" />
+  <link href="styles.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <textarea id="editText" rows="4" cols="50"></textarea>
+      <button id="saveButton" onclick="saveEditedText()">Save</button>
+    </div>
+  </div>
+
+  <div id="editModal_newline" class="modal">
+    <div class="modal-content_newline">
+      <textarea id="editText_newline" rows="4" cols="50"></textarea>
+      <button id="saveButton_newline" onclick="saveEditedText_newline()">Save</button>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <button id="firsttab" class="tab-button active" onclick="switchToolbar_Tabs(event, 'main')">Main</button>
+    <button class="tab-button" onclick="switchToolbar_Tabs(event, 'font')">Font</button>
+    <button class="tab-button" onclick="switchToolbar_Tabs(event, 'paragraph')">Paragraph</button>
+    <button class="tab-button" onclick="switchToolbar_Tabs(event, 'table')">Table</button>
+    <button class="tab-button" onclick="switchToolbar_Tabs(event, 'custom')">Custom</button>
+  </div>
+
+  <div class="all_toolbar_container">
+    <div class="tab-indicator"></div> <!-- Sliding Indicator -->
+    <div id="main" class="tab-content active">
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
+        <div class="tooltip">
+          <button id="add-mathlatex" class="icon-button" aria-label="Add Inline Equation">x²</button>
+          <span class="tooltiptext">Add Inline Equation</span>
+        </div>
+        <div class="tooltip">
+          <button id="add-newline-mathlatex" class="icon-button" aria-label="Add Newline Equation">//..x²..//</button>
+          <span class="tooltiptext">Add Newline Equation</span>
+        </div>
+        <div class="tooltip">
+          <button class="icon-button" aria-label="Save As" onclick="saveToHTMLFile()">💾</button>
+          <span class="tooltiptext">Save As</span>
+        </div>
+        <div class="tooltip">
+          <button id="add-newPage" class="icon-button" aria-label="New Page">📄</button>
+          <span class="tooltiptext">Add Page</span>
+        </div>
+        <div class="tooltip">
+          <button id="LoadNote" class="icon-button" aria-label="Export">📤</button>
+          <span class="tooltiptext">Import</span>
+        </div>
+        <div class="tooltip">
+          <button id="GrammarCheck" class="icon-button" onclick="toggleSpellCheckForPagebook()"
+            aria-label="Grammar">🔎</button>
+          <span class="tooltiptext">Toggle Grammar Check</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="font" class="tab-content">
+      <div class="font-settings">
+        <label for="font-size" style="font-size: 8px;">Font:</label>
+        <input type="number" id="fontSizeInput" name="font-size" value="11" min="8" max="72" step="1"> <span
+          style="font-size: 8px;">px</span>
+        <select id="fontFamilySelect" name="font-family" style="font-size: 8px;">
+          <option value="Arial">Arial</option>
+          <option value="Segoe UI">Segoe UI</option>
+          <option value="Times New Roman">Times New Roman</option>
+          <option value="Georgia">Georgia</option>
+          <option value="Courier New">Courier New</option>
+        </select>
+        <button class="all_toolbar_container-button" onclick="applyTextStyling()">Apply Selected</button>
+        <button class="all_toolbar_container-button" onclick="applyStylesToContainer()">Apply All Pages</button>
+      </div>
+    </div>
+
+    <div id="paragraph" class="tab-content">
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
+        <div class="tooltip">
+          <button class="icon-button" aria-label="Bullets">
+            <img
+              src="https://github.com/QOQORO-IT/cdn/blob/main/bullet-list-icon-in-monochrome-style--ui--no-pen.png?raw=true"
+              alt="Bullet Icon" style="width: 24px; height: 24px;">
+          </button>
+          <span class="tooltiptext">Bullets</span>
+        </div>
+        <!-- Numbering, using custom icon -->
+        <div class="tooltip">
+          <button class="icon-button" aria-label="Numbering">
+            <img
+              src="https://github.com/QOQORO-IT/cdn/blob/main/numbering-list-icon-in-monochrome-style--ui.png?raw=true"
+              alt="Numbering Icon" style="width: 24px; height: 24px;">
+          </button>
+          <span class="tooltiptext">Numbering</span>
+        </div>
+        <!-- Align Left -->
+        <div class="tooltip">
+          <button class="icon-button" aria-label="Align Left"><i class="fi fi-rr-align-left"></i></button>
+          <span class="tooltiptext">Align Left</span>
+        </div>
+        <!-- Align Center -->
+        <div class="tooltip">
+          <button class="icon-button" aria-label="Align Center"><i class="fi fi-rr-align-center"></i></button>
+          <span class="tooltiptext">Align Center</span>
+        </div>
+        <!-- Align Right -->
+        <div class="tooltip">
+          <button class="icon-button" aria-label="Align Right"><i class="fi fi-rr-symbol"></i></button>
+          <span class="tooltiptext">Align Right</span>
+        </div>
+        <!-- Justify -->
+        <div class="tooltip">
+          <button class="icon-button" aria-label="Justify"><i class="fi fi-rr-align-justify"></i></button>
+          <span class="tooltiptext">Justify</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="table" class="tab-content">
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
+        <!-- Add New Table -->
+        <div class="tooltip">
+          <button class="icon-button" aria-label="Add New Table" onclick="addTableAtCaret()"><i
+              class="fi fi-rr-table"></i></button>
+          <span class="tooltiptext">Add New Table</span>
+        </div>
+        <!-- Add New Row -->
+        <div class="tooltip">
+          <button class="icon-button" aria-label="Insert Row" onclick="addRow()"><img
+              src="logos/UI_Add_Row_arrow-sign - arrow-upwards - minimalistic-ui.svg" alt="Bullet Icon">
+            <span class="tooltiptext">Add New Row</span>
+        </div>
+        <!-- Add New Column -->
+        <div class="tooltip">
+          <button class="icon-button" aria-label="Insert Column" onclick="addColumn()"><img
+              src="logos/UI_Add_Column_arrow-sign - arrow-upwards - minimalistic-ui.svg" alt="Bullet Icon"></button>
+          <span class="tooltiptext">Add New Column</span>
+        </div>
+        <!-- Remove Row -->
+        <div class="tooltip">
+          <button class="icon-button" aria-label="Remove Row" onclick="deleteRow()"><img
+              src="logos/UI_Remove_Row_arrow-sign - arrow-upwards - minimalistic-ui.svg" alt="Bullet Icon"></button>
+          <span class="tooltiptext">Remove Row</span>
+        </div>
+        <!-- Remove Column -->
+        <div class="tooltip">
+          <button class="icon-button" aria-label="Remove Column" onclick="deleteColumn()"><img
+              src="logos/UI_Remove_Column_arrow-sign - arrow-upwards - minimalistic-ui.svg" alt="Bullet Icon"></button>
+          <span class="tooltiptext">Remove Column</span>
+        </div>
+        <div class="tooltip">
+          <button class="icon-button" aria-label="Clear Selected Cells" onclick="clearSelectedCells()"><img
+              src="logos/UI_Clear_Selected_Cell.svg" alt="Clear Selected Cell"></button>
+          <span class="tooltiptext">Clear Selected Cells</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="custom" class="tab-content">
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
+        <div class="tooltip">
+          <button id="add-customPage" class="icon-button" aria-label="New Custom Page">📄</button>
+          <span class="tooltiptext">New Custom Page</span>
+        </div>
+        <div class="tooltip">
+          <button id="add-otherNoteLink" class="icon-button" aria-label="New Custom Page">📄</button>
+          <span class="tooltiptext">Add link to other Q-Note</span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <button class="hide-show-button" aria-label="Hide or show toolbar" onclick="toggleToolbar()">🔼</button>
+
+  <script>
+    if (window.parent) {
+      window.parent.handleClick_forNote = window.handleClick_forNote;
+    }
+    
+    // Global variables
+    let isToolbarVisible = true;
+
+    // DOM elements
+    const toolbar = document.querySelector('.all_toolbar_container');
+    const toolbartabs = document.querySelector('.toolbar');
+    const hideShowButton = document.querySelector('.hide-show-button');
+    const indicator = document.querySelector('.tab-indicator');
+
+    function switchToolbar_Tabs(evt, tabName) {
+      const tabcontent = document.getElementsByClassName("tab-content");
+      const tabbuttons = document.getElementsByClassName("tab-button");
+
+      // Hide all tab content and remove "active" class from all buttons
+      Array.from(tabcontent).forEach(tab => tab.classList.remove("active"));
+      Array.from(tabbuttons).forEach(btn => btn.classList.remove("active"));
+
+      // Show the current tab and activate the button
+      document.getElementById(tabName).classList.add("active");
+      evt.currentTarget.classList.add("active");
+
+      // Move the indicator
+      const activeBtn = evt.currentTarget;
+      indicator.style.width = `${activeBtn.offsetWidth}px`;
+      indicator.style.left = `${activeBtn.offsetLeft}px`;
+
+      // Position the hide-show button
+      positionHideShowButton();
+    }
+
+    function toggleToolbar() {
+      isToolbarVisible = !isToolbarVisible;
+      toolbar.style.display = isToolbarVisible ? 'block' : 'none';
+      toolbartabs.style.display = isToolbarVisible ? 'block' : 'none';
+      hideShowButton.textContent = isToolbarVisible ? '🔼' : '🔽';
+      positionHideShowButton();
+    }
+
+    function positionHideShowButton() {
+      const tabIndicator = document.querySelector('.tab-indicator');
+      const activeToolbar = document.querySelector('.tab-content.active');
+
+      if (hideShowButton) {
+        let topPosition;
+
+        if (isToolbarVisible && activeToolbar) {
+          const toolbarRect = activeToolbar.getBoundingClientRect();
+          topPosition = toolbarRect.bottom + window.scrollY;
+        } else if (tabIndicator) {
+          const indicatorRect = tabIndicator.getBoundingClientRect();
+          topPosition = indicatorRect.bottom + window.scrollY;
+        } else {
+          // Fallback position if neither activeToolbar nor tabIndicator is found
+          const toolbarContainer = document.querySelector('.tab-button');
+          if (toolbarContainer) {
+            const containerRect = toolbarContainer.getBoundingClientRect();
+            topPosition = containerRect.bottom + window.scrollY;
+          } else {
+            console.warn("Could not find reference elements for positioning hideShowButton");
+            return;
+          }
+        }
+
+        hideShowButton.style.top = `${topPosition}px`;
+      }
+    }
+
+    function adjustTooltipPosition() {
+      const tooltips = document.querySelectorAll('.tooltip');
+      tooltips.forEach(tooltip => {
+        const button = tooltip.querySelector('.icon-button');
+        const tooltipText = tooltip.querySelector('.tooltiptext');
+
+        function positionTooltip() {
+          const rect = button.getBoundingClientRect();
+          const left = rect.left + (button.offsetWidth / 2) - (tooltipText.offsetWidth / 2);
+          const top = rect.top - tooltipText.offsetHeight - 10; // 10px gap
+          tooltipText.style.left = `${left}px`;
+          tooltipText.style.top = `${top}px`;
+        }
+
+        function showTooltip() {
+          tooltipText.style.visibility = 'visible';
+          tooltipText.style.opacity = '1';
+          positionTooltip();
+          // Continuously update position while tooltip is visible
+          function updatePosition() {
+            if (tooltipText.style.visibility === 'visible') {
+              positionTooltip();
+              requestAnimationFrame(updatePosition);
+            }
+          }
+          requestAnimationFrame(updatePosition);
+        }
+
+        function hideTooltip() {
+          tooltipText.style.visibility = 'hidden';
+          tooltipText.style.opacity = '0';
+        }
+
+        button.addEventListener('mouseenter', showTooltip);
+        button.addEventListener('mouseleave', hideTooltip);
+      });
+    }
+
+    (function() {
+      function handleSpanRightClick(event) {
+        if (event.target.classList.contains('clickable-reference-qnote')) {
+          event.preventDefault();
+          window.qnoteLinkModal.showModal(event.target);
+        }
+      }
+
+      function initializeExistingSpans() {
+        const spans = document.querySelectorAll('.clickable-reference-qnote');
+        spans.forEach(span => {
+          window.qnoteLinkModal.addRightClickListener(span);
+          window.qnoteLinkModal.makeSpanRemovable(span);
+        });
+      }
+
+      document.addEventListener('contextmenu', handleSpanRightClick);
+
+      document.addEventListener('DOMContentLoaded', () => {
+        initializeExistingSpans();
+
+        const addButton = document.getElementById('add-otherNoteLink');
+        if (addButton) {
+          addButton.addEventListener('click', () => {
+            window.qnoteLinkModal.createAndInsertReferenceSpan();
+          });
+        }
+      });
+    })();
+
+    // Call this function when the DOM is ready
+    document.addEventListener('DOMContentLoaded', adjustTooltipPosition);
+    // Also call it on window resize
+    window.addEventListener('resize', adjustTooltipPosition);
+
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', function () {
+
+      
+      setTimeout(() => {
+        const firstTab = document.getElementById("firsttab");
+        if (firstTab) {
+          firstTab.click();
+        } else {
+          console.warn("Element with id 'firsttab' not found");
+        }
+      }, 2000);
+
+      // Initial indicator setup
+      const activeBtn = document.querySelector('.tab-button.active');
+      if (activeBtn) {
+        indicator.style.width = `${activeBtn.offsetWidth}px`;
+        indicator.style.left = `${activeBtn.offsetLeft}px`;
+        indicator.setAttribute("data-irremovable", "");
+      }
+
+      adjustTooltipPosition();
+    });
+
+    window.addEventListener('resize', adjustTooltipPosition);
+
+    // Use requestAnimationFrame for smoother performance
+    function updatePosition() {
+      positionHideShowButton();
+      requestAnimationFrame(updatePosition);
+    }
+    requestAnimationFrame(updatePosition);
+  </script>
+
+  <div id="MainContainer" class="MainContainer" style="position: relative; top: 50px;">
+
+    <div contenteditable id="pagenumber1" class="pagebook">
+      <div>Type anything inside here!</div>
+    </div>
+  </div>
+  <input type="file" id="fileUpload" style="display: none;" accept=".qnote" onchange="loadSavedContent()" />
+
+
+  <script src="merge_numberingList.js"> </script>
+  <script src="merge_tables.js"> </script>
+  <script src="transform_toBulletList.js"> </script>
+  <script src="transform_toHeading2.js"> </script>
+  <script src="paste_Clipboard.js"></script>
+  <script src="handle_overflow.js"> </script>
+
+  <script src="saveNote.js"></script>
+
+  <script src="handle_underflow.js"> </script>
+  <script src="add_newpage.js"> </script>
+  <script src="add_custompage.js"> </script>
+  <script src="insertMath.js"></script>
+  <script src="insertMath_Newline.js"></script>
+  <script src="tables_handler.js"></script>
+  <script src="script.js"></script>
+  <script src="alignText.js"></script>
+
+  <script src="loadNote.js"></script>
+  <script src="loadNote_fromBlob.js"></script>
+  <script src="handleNestedTexts.js"></script>
+  <script src="addLink_toQnote.js"></script>
+  <script src="styling_text.js"></script>
+
+  <script>
+    function toggleSpellCheckForPagebook() {
+      // Get all elements with class 'pagebook' that are contenteditable
+      var elements = document.getElementsByClassName('pagebook');
+      // Determine the current state of spellcheck based on the first element (assuming all are synced)
+      var currentState = elements.length > 0 ? elements[0].spellcheck : false;
+      var newState = !currentState;
+
+      for (var i = 0; i < elements.length; i++) {
+        if (elements[i].contentEditable === "true") {
+          // Set the new state for all elements at once
+          elements[i].spellcheck = newState;
+        }
+      }
+      console.log(`Spellcheck for all editable elements is now ${newState ? 'enabled' : 'disabled'}.`);
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Function to apply bullet points to the selected text
+      document.querySelector('.icon-button[aria-label="Bullets"]').addEventListener('click', function () {
+        convertSelectionToList_bullets('ul');
+      });
+
+      // Function to apply numbering to the selected text
+      document.querySelector('.icon-button[aria-label="Numbering"]').addEventListener('click', function () {
+        convertSelectionToList_bullets('ol');
+      });
+
+      // Functions to align selected text
+      document.querySelector('.icon-button[aria-label="Align Left"]').addEventListener('click', function () {
+        alignText('left');
+      });
+      document.querySelector('.icon-button[aria-label="Align Center"]').addEventListener('click', function () {
+        alignText('center');
+      });
+      document.querySelector('.icon-button[aria-label="Align Right"]').addEventListener('click', function () {
+        alignText('right');
+      });
+      document.querySelector('.icon-button[aria-label="Justify"]').addEventListener('click', function () {
+        alignText('justify');
+      });
+
+
+    });
+
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,241 @@
+/* styles.css */
+.toolbar {
+    display: flex;
+    justify-content: left;
+    top: 3px;
+    z-index: 1000;
+    position: fixed;
+    bacground-color: transperent;
+    /* background-color: #f5f5f5; */
+    padding: 3px 0;
+    transition: transform 0.3s ease-in-out;
+}
+
+.toolbar.hidden {
+    transform: translateY(-100%);
+}
+
+
+.hide-show-button {
+    position: absolute;
+    left: 20px;
+    top: 60px;
+    width: 30px;
+    z-index: 1001;
+    height: 15px;
+    background-color: #f5f5f5;
+    border: none;
+    border-radius: 0 0 15px 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 1px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
+}
+
+.hide-show-button:hover {
+    background-color: #e0e0e0;
+}
+
+
+.tab-button {
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    color: #C73131;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 15px 15px 0px 0px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.tab-button:hover {
+    background-color: #f0f0f0;
+    border-radius: 15px 15px 0px 0px;
+}
+
+.tab-button.active {
+    background-color: #C73131;
+    border-radius: 15px 15px 0px 0px;
+    color: white;
+}
+
+.tab-indicator {
+    position: fixed;
+    margin-left:18px;
+    height: 2px;
+    background-color: #0078d4;
+    margin-top: 13px;
+    transition: left 0.4s, width 0.4s;
+    z-index: 1001;
+}
+
+.tab-content {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    padding: 5px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    margin-top: 15px;
+    width: 100%;
+    height: auto;
+    max-height: 35px;
+    overflow-y: hidden;
+}
+
+.tab-content.active {
+    display: flex;
+    align-items: center;
+}
+
+button.icon-button {
+    min-width: 15px;
+    min-height: 15px;
+    width: auto;
+    height: auto;
+    margin: 0 2px;
+    padding: 5px;
+    border: none;
+    border-radius: 4px;
+    background-color: transparent;
+    color: #000000;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+button.icon-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+button.icon-button:active {
+    background-color: rgba(0, 0, 0, 0.1);
+    transform: scale(0.95);
+}
+
+button.icon-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(0, 122, 255, 0.3);
+}
+
+button.icon-button img,
+button.icon-button i {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: auto;
+  min-height: 8px;
+  max-width: 100px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 3px;
+  padding: 2px 4px;
+  position: fixed; /* Changed back to fixed for consistent positioning */
+  z-index: 1002;
+  opacity: 0;
+  transition: opacity 0.2s, visibility 0.2s;
+  font-size: 8px;
+  line-height: 1.2;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -3px;
+  border-width: 3px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+}
+
+
+
+.font-settings {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.label {
+    font-size: 9px;
+    color: #000000;
+}
+
+.font-settings select,
+.font-settings input[type="number"] {
+    padding: 4px 6px;
+    margin: 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 9px;
+    transition: border-color 0.3s;
+}
+
+.font-settings select:hover,
+.font-settings input[type="number"]:hover {
+    border-color: #0078d4;
+}
+
+.font-settings button {
+    padding: 4px 8px;
+    margin: 0;
+    border: none;
+    border-radius: 3px;
+    background-color: transparent;
+    color: #000000;
+    font-size: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.font-settings button:hover {
+    background-color: #f0f0f0;
+    color: #0078d4;
+}
+
+.font-settings button:active {
+    background-color: #e0e0e0;
+    color: #0078d4;
+}
+
+.icon-button img {
+    width: 100%;
+    height: 100%;
+    padding: 1px;
+    object-fit: contain;
+    filter: invert(30%) sepia(190%) saturate(4778%) hue-rotate(359deg) brightness(103%) contrast(126%);
+    transition: filter 0.3s;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 600px) {
+    .tabs {
+        width: auto;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
