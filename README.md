@@ -2,6 +2,8 @@
 
 [English Version](README_en.md)
 
+### Warning if the app cannot show lists of files, turn off your Firewall to allow connections with Github Pages version (If you dont use local hosting)
+
 ## 概要
 
 QOQORO Notesは、クライアントのブラウザで動作するワードプロセッサやPKMに類似したWebアプリケーションです。NPMやその他のソフトウェアのインストールは不要です。
