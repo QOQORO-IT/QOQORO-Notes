@@ -1,0 +1,333 @@
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  padding: 10px;
+  background-color: #eed7d7; 
+}
+
+#fontSizeInput {
+  width: 26px;
+  font-size: 9px;
+}
+
+#fontFamilySelect {
+  width: 70px;
+  font-size: 11px;
+}
+
+.ghost-div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px; /* Match the image's width */
+  height: 10px; /* Match the image's height */
+  background-color: transparent; /* Make it invisible */
+  z-index: 9995; /* Ensure it's above other elements */
+}
+
+button {
+  background-color: #6200ee;
+  /* Primary button color */
+  color: white;
+  border: none;
+  font-size: 12px;
+  border-radius: 4px;
+  /* Rounded corners for buttons */
+  cursor: pointer;
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease;
+}
+
+input[type="number"],
+select {
+  border: 2px solid #d3d3d8;
+  padding: 2.5px 5px;
+  border-radius: 4px;
+  /* Consistent rounded corners */
+  color: #333;
+  background-color: #fff;
+}
+
+
+
+button:hover {
+  box-shadow: 0 4px 20px rgba(98, 0, 238, 0.3);
+  /* Glowing effect on hover */
+  transform: translateY(-2px);
+  /* Slight raise effect */
+}
+
+
+#toolbox {
+  padding: 2px;
+  border: 2px solid #d3d3d8;
+  /* Light gray border */
+  background-color: #ffffff;
+  /* White background */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Subtle shadow for depth */
+  z-index: 1000;
+  /* Ensure it stays on top of other elements */
+  position: fixed;
+  /* Fixed at the top */
+  width: 100%;
+  /* Full width */
+  top: 0;
+  /* Align to the top */
+}
+
+.resize-handle {
+  width: 15px;
+  height: 15px;
+  background-color: blue;
+  position: absolute;
+  z-index: 1010;
+  display: none;
+  /* Initially hide handles */
+}
+
+.container {
+  position: relative;
+  display: inline-block;
+  border: 1px solid black;
+  z-index: 1000;
+  float: left;
+  margin-right: 10px;
+}
+
+.text-container {
+  margin-top: 20px;
+}
+
+#context-menu_image {
+  z-index: 1011;
+  font-size: 9px;
+  background-color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* Ensure it is above other elements */
+}
+
+#context-menu_image .child:hover {
+  background-color: gray;
+}
+
+.pagebook {
+  border: 2px solid black;
+  background-color: white;
+  margin: 10px 0;
+  padding: 2px;
+  font-size: 11px;
+  overflow: hidden;
+  height: 1122px;  /* A4 height in pixels */
+  width: 793px;   /* A4 width in pixels */
+  position: relative;
+  transform: translate(20%, 0);
+}
+
+.custompage-main {
+  border: 2px solid black;
+  width: 70%;
+  padding: 1.5px;
+  background-color: white;
+  position: relative;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  transform: translate(10%, 0);
+}
+
+/* .pagebook>div {
+  background-color: yellow;
+} */
+.image-wrapper {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.image-wrapper img {
+  display: block;
+}
+
+.katexspan:hover {
+  background-color: gray;
+}
+
+.katex:hover {
+  background-color: gray;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1001;
+  /* Above everything else */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  /* Semi-transparent black background */
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  /* Centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  /* Shadow for depth */
+}
+
+.Newline_equation:hover {
+  background-color: gray;
+}
+
+#MainContainer table {
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+#MainContainer td {
+  border: 3px solid black;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  width: auto;
+}
+
+#MainContainer td > * {
+  padding: 5px;
+}
+
+#MainContainer td:hover {
+  outline: 4px solid #0078D7;
+}
+
+/* Cursor styles for resizing */
+#MainContainer td {
+  cursor: text;
+}
+
+#MainContainer td::after {
+  content: '';
+  position: absolute;
+  right: -8px;
+  bottom: -8px;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+  z-index: 1;
+}
+
+#MainContainer td::before {
+  content: '';
+  position: absolute;
+  right: -8px;
+  top: 0;
+  bottom: 0;
+  width: 16px;
+  cursor: col-resize;
+  z-index: 1;
+}
+
+#MainContainer tr:last-child td::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -8px;
+  height: 16px;
+  cursor: row-resize;
+  z-index: 1;
+}
+
+/* Hide resize handlers when not hovering */
+#MainContainer td:not(:hover)::after,
+#MainContainer td:not(:hover)::before,
+#MainContainer tr:last-child td:not(:hover)::after {
+  display: none;
+}
+
+/* Ensure consistent border appearance */
+#MainContainer td,
+#MainContainer td:hover,
+#MainContainer td:active {
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;
+}
+
+/* Style for cells with hidden overflow */
+#MainContainer td.overflow-visible {
+  overflow: visible;
+  white-space: normal;
+  text-overflow: clip;
+}
+
+.modal_newline {
+  display: none;
+  position: fixed;
+  z-index: 1001;
+  /* Above everything else */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  /* Semi-transparent black background */
+}
+
+.modal-content_newline {
+  background-color: #fefefe;
+  margin: 15% auto;
+  /* Centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  /* Shadow for depth */
+}
+
+@media print {
+  body {
+    background: none;
+    padding: 0;
+  }
+
+  #toolbox, button, .ghost-div, .resize-handle, #context-menu_image {
+    display: none !important;
+  }
+
+  .pagebook {
+    border: none;
+    margin: 2px;
+    padding: 2px;
+    height: 100%;
+    width: 100%;
+    transform: none;
+    page-break-after: always;
+  }
+
+  .custompage-main {
+    border: none;
+    visibility: hidden;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    transform: none;
+  }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+}
