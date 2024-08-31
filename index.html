@@ -176,6 +176,40 @@
     </div>
 
     <script>
+        function extractDomainOrIP(url) {
+          // Create a URL object
+          let parsedUrl;
+          try {
+            parsedUrl = new URL(url);
+          } catch (error) {
+            console.error("Invalid URL:", error);
+            return null;
+          }
+
+          // Extract the hostname
+          let hostname = parsedUrl.hostname;
+
+          // Check if the hostname is an IP address
+          const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
+          if (ipRegex.test(hostname)) {
+            return hostname; // Return the IP address as is
+          }
+
+          // If it's not an IP, extract the domain
+          const parts = hostname.split('.');
+          if (parts.length > 2) {
+            // Return the last two parts for domains like 'www.example.com'
+            return parts.slice(-2).join('.');
+          } else {
+            // Return the whole hostname for domains like 'example.com'
+            return hostname;
+          }
+        }
+
+        const currentDomainOrIP = extractDomainOrIP(window.location.href);
+        console.log("Current domain or IP:", currentDomainOrIP);
+
+
         // Listen for messages from iframes in the parent window
         window.addEventListener('message', function(event) {
             if (event.data && event.data.type === 'referenceClicked') {
